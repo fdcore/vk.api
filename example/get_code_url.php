@@ -1,6 +1,6 @@
 <?php
 ini_set('display_errors', true);
-include('../vk.sa.api.php');
+include('../vk.api.php');
 include('print_var.php');
 include('lime.php');
 include('config.php');
