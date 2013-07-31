@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>Vk.api by fdcore</title>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Vk.api : Vkontakte standalone php api" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Vk.api</title>
   </head>
 
   <body>
-    <div id="container">
-      <div class="inner">
 
-        <header>
-          <h1>Vk.api</h1>
-          <h2>Vkontakte standalone php api</h2>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/fdcore/vk.api">View on GitHub</a>
+
+          <h1 id="project_title">Vk.api</h1>
+          <h2 id="project_tagline">Vkontakte standalone php api</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/fdcore/vk.api/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/fdcore/vk.api/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
+    </div>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/fdcore/vk.api/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/fdcore/vk.api/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/fdcore/vk.api" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
-          <h1>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
 <a name="vkapi" class="anchor" href="#vkapi"><span class="octicon octicon-link"></span></a>vk.api</h1>
 
 <p>Работа с API Вконтакте для StandAlone приложений на языке php.</p>
@@ -39,58 +39,117 @@
 <p>Для работы с api вам необходимо выполнить несколько действий:</p>
 
 <ol>
-<li>Создать "Standalone-приложение" <a href="https://vk.com/editapp?act=create">https://vk.com/editapp?act=create</a>
+<li>Создать <strong>"Standalone-приложение"</strong> <a href="https://vk.com/editapp?act=create">https://vk.com/editapp?act=create</a>
 </li>
 <li>Получить access_token (об этом ниже)</li>
-<li>Классу нужно передать client_id приложения и секретный ключ который вам даётся при создании приложения</li>
+<li>Классу нужно передать <strong>client_id</strong> приложения и секретный ключ который вам даётся при создании приложения</li>
 </ol><h2>
 <a name="%D0%9F%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-access_token" class="anchor" href="#%D0%9F%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-access_token"><span class="octicon octicon-link"></span></a>Получение access_token</h2>
 
 <p>Выполним метод get_code_token для получения ссылки которая вернёт нам code</p>
 
-<pre><code>include('vk.api.php');
-$v = new Vk($config);
-$url = $v-&gt;get_code_token();
+<div class="highlight"><pre>    <span class="k">include</span><span class="p">(</span><span class="s1">'vk.api.php'</span><span class="p">);</span>
+    <span class="nv">$v</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vk</span><span class="p">(</span><span class="nv">$config</span><span class="p">);</span>
+    <span class="nv">$url</span> <span class="o">=</span> <span class="nv">$v</span><span class="o">-&gt;</span><span class="na">get_code_token</span><span class="p">();</span>
 
-echo $url;
-</code></pre>
+    <span class="k">echo</span> <span class="nv">$url</span><span class="p">;</span>
+</pre></div>
 
-<p>Переменная $url будет содержать ссылку при переходе на которую вас попросят авторизоваться и предоставить права приложению, после чего вас перекинут на пустую страницу и в URL будет code=&lt;нужный код&gt;.</p>
+<p>Переменная <strong>$url</strong> будет содержать ссылку при переходе на которую вас попросят авторизоваться и предоставить права приложению, после чего вас перекинут на пустую страницу и в URL будет code=&lt;нужный код&gt;.</p>
 
-<p>Для получения токена и owner_id выполните метод get_token</p>
+<p>Для получения токена и <strong>owner_id</strong> выполните метод <strong>get_token()</strong></p>
 
-<pre><code>$response = $v-&gt;get_token('ff604712f10b2b6ac0');
+<div class="highlight"><pre>    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$v</span><span class="o">-&gt;</span><span class="na">get_token</span><span class="p">(</span><span class="s1">'ff604712f10b2b6ac0'</span><span class="p">);</span>
 
-var_dump($response);
-</code></pre>
+    <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$response</span><span class="p">);</span>
+</pre></div>
 
-<h1>
-<a name="%D0%92%D1%8B%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5-api" class="anchor" href="#%D0%92%D1%8B%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5-api"><span class="octicon octicon-link"></span></a>Выполнение Api</h1>
+<h2>
+<a name="%D0%92%D1%8B%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5-api" class="anchor" href="#%D0%92%D1%8B%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5-api"><span class="octicon octicon-link"></span></a>Выполнение Api</h2>
 
 <p>Для выполнения определённых Api вам необходимы на это права, для этого при создании токена нужно указать нужные scope.</p>
 
-<pre><code>$config['secret_key'] = 'ваш секретный ключ приложения';
-$config['client_id'] = 0; // номер приложения
-$config['user_id'] = 0; // id текущего пользователя (не обязательно)
-$config['access_token'] = 'ваш токен доступа';
-$config['scope'] = 'wall,photos,video'; // права доступа к методам (для генерации токена)
+<div class="highlight"><pre>    <span class="nv">$config</span><span class="p">[</span><span class="s1">'secret_key'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'ваш секретный ключ приложения'</span><span class="p">;</span>
+    <span class="nv">$config</span><span class="p">[</span><span class="s1">'client_id'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// номер приложения</span>
+    <span class="nv">$config</span><span class="p">[</span><span class="s1">'user_id'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// id текущего пользователя (не обязательно)</span>
+    <span class="nv">$config</span><span class="p">[</span><span class="s1">'access_token'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'ваш токен доступа'</span><span class="p">;</span>
+    <span class="nv">$config</span><span class="p">[</span><span class="s1">'scope'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'wall,photos,video'</span><span class="p">;</span> <span class="c1">// права доступа к методам (для генерации токена)</span>
 
-$v = new Vk($config);
+    <span class="nv">$v</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vk</span><span class="p">(</span><span class="nv">$config</span><span class="p">);</span>
 
-// пример публикации сообщения на стене пользователя
-// значения массива соответствуют значениям в Api https://vk.com/dev/wall.post
+    <span class="c1">// пример публикации сообщения на стене пользователя</span>
+    <span class="c1">// значения массива соответствуют значениям в Api https://vk.com/dev/wall.post</span>
 
-$response = $v-&gt;api('wall.post', array('message' =&gt; 'I testing API form https://github.com/fdcore/vk.api'));
-</code></pre>
-        </section>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$v</span><span class="o">-&gt;</span><span class="na">api</span><span class="p">(</span><span class="s1">'wall.post'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">'message'</span> <span class="o">=&gt;</span> <span class="s1">'I testing API form https://github.com/fdcore/vk.api'</span><span class="p">));</span>
+</pre></div>
 
-        <footer>
-          Vk.api is maintained by <a href="https://github.com/fdcore">fdcore</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+<h2>
+<a name="%D0%97%D0%B0%D0%BB%D0%B8%D0%B2%D0%BA%D0%B0-%D1%84%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2" class="anchor" href="#%D0%97%D0%B0%D0%BB%D0%B8%D0%B2%D0%BA%D0%B0-%D1%84%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2"><span class="octicon octicon-link"></span></a>Заливка файлов</h2>
 
-        
-      </div>
+<p>Для заливки файлов в данный момент есть 3 метода:</p>
+
+<ul>
+<li>Загрузка видеозаписей <strong>$v-&gt;upload_video()</strong>
+</li>
+<li>Загрузка фотографий на стену пользователя <strong>$v-&gt;upload_photo()</strong>
+</li>
+<li>Загрузка документов <strong>$v-&gt;upload_doc()</strong>
+</li>
+</ul><h3>
+<a name="%D0%9F%D1%80%D0%B8%D0%BC%D0%B5%D1%80-%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B8-%D1%84%D0%BE%D1%82%D0%BE" class="anchor" href="#%D0%9F%D1%80%D0%B8%D0%BC%D0%B5%D1%80-%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B8-%D1%84%D0%BE%D1%82%D0%BE"><span class="octicon octicon-link"></span></a>Пример загрузки фото</h3>
+
+<div class="highlight"><pre>    <span class="c1">// загрузка фото на сервер</span>
+    <span class="nv">$attachments</span> <span class="o">=</span> <span class="nv">$v</span><span class="o">-&gt;</span><span class="na">upload_photo</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">'4b67bhWrc4g.jpg'</span><span class="p">,</span> <span class="s1">'n52W2BdXdYE.jpg'</span><span class="p">));</span>
+
+    <span class="c1">// публикация на стене</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$v</span><span class="o">-&gt;</span><span class="na">api</span><span class="p">(</span><span class="s1">'wall.post'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">'message'</span><span class="o">=&gt;</span><span class="s1">'я публикую фотографии'</span><span class="p">,</span> <span class="s1">'attachments'</span> <span class="o">=&gt;</span> <span class="nb">implode</span><span class="p">(</span><span class="s1">','</span><span class="p">,</span> <span class="nv">$attachments</span><span class="p">)));</span>
+
+</pre></div>
+
+<h3>
+<a name="%D0%9F%D1%80%D0%B8%D0%BC%D0%B5%D1%80-%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B8-%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE" class="anchor" href="#%D0%9F%D1%80%D0%B8%D0%BC%D0%B5%D1%80-%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B8-%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE"><span class="octicon octicon-link"></span></a>Пример загрузки видео</h3>
+
+<div class="highlight"><pre>
+   <span class="c1">// встраивание видео с YouTube без заливки</span>
+
+   <span class="nv">$attach_video</span> <span class="o">=</span> <span class="nv">$v</span><span class="o">-&gt;</span><span class="na">upload_video</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+       <span class="s1">'link'</span><span class="o">=&gt;</span><span class="s1">'http://www.youtube.com/watch?v=5ZeA4AMrcd8'</span><span class="p">,</span>
+       <span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="s1">'Tasogare Otome X Amnesia / OST (Nika Lenina Russian Version)'</span><span class="p">,</span>
+       <span class="s1">'description'</span> <span class="o">=&gt;</span> <span class="s2">"Трек оригинал: Hiiragi Nao - Requiem"</span><span class="p">,</span>
+       <span class="s1">'wallpost'</span> <span class="o">=&gt;</span> <span class="mi">1</span>
+   <span class="p">));</span>
+
+   <span class="c1">// заливка видео на VK.com</span>
+
+   <span class="nv">$attach_name</span> <span class="o">=</span> <span class="nv">$v</span><span class="o">-&gt;</span><span class="na">upload_video</span><span class="p">(</span>
+       <span class="k">array</span><span class="p">(</span><span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Fadoo Sama'</span><span class="p">,</span>
+           <span class="s1">'description'</span> <span class="o">=&gt;</span> <span class="s1">'AMV'</span><span class="p">,</span>
+           <span class="s1">'wallpost'</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+           <span class="s1">'group_id'</span> <span class="o">=&gt;</span> <span class="mi">0</span>
+       <span class="p">),</span> <span class="s1">'04975.Fadoo-Sama-DUALITY.amvnews.ru.mp4'</span><span class="p">);</span>
+
+</pre></div>
+
+<h3>
+<a name="%D0%9F%D1%80%D0%B8%D0%BC%D0%B5%D1%80-%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B8-%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%B0" class="anchor" href="#%D0%9F%D1%80%D0%B8%D0%BC%D0%B5%D1%80-%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B8-%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%B0"><span class="octicon octicon-link"></span></a>Пример загрузки документа</h3>
+
+<div class="highlight"><pre>    <span class="nv">$attach_doc_file</span> <span class="o">=</span> <span class="nv">$v</span><span class="o">-&gt;</span><span class="na">upload_doc</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">'iZKE4JdP4Q0mT.jpg'</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span> <span class="nb">is_string</span><span class="p">(</span><span class="nv">$attach_doc_file</span><span class="p">)</span> <span class="p">)</span> <span class="k">echo</span> <span class="nv">$attach_doc_file</span><span class="p">;</span>
+
+</pre></div>
+      </section>
     </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Vk.api maintained by <a href="https://github.com/fdcore">fdcore</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
   </body>
 </html>
