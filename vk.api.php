@@ -64,7 +64,13 @@ class Vk{
         return  self::METHOD_URL . $method . '?' . $params.'&access_token=' . $this->access_token;
     }
 
-    public function get_code_token(){
+    /**
+     * Получить ссылка на запрос прав доступа
+     *
+     * @param string $type тип ответа (code - одноразовый код авторизации , token - готовый access token)
+     * @return mixed
+     */
+    public function get_code_token($type="code"){
 
         $url = self::AUTHORIZE_URL;
 
@@ -74,7 +80,7 @@ class Vk{
         $url = str_replace('{scope}', $scope, $url);
         $url = str_replace('{redirect_uri}', self::CALLBACK_BLANK, $url);
         $url = str_replace('{display}', 'page', $url);
-        $url = str_replace('{response_type}', 'code', $url);
+        $url = str_replace('{response_type}', $type, $url);
 
         return $url;
 
@@ -180,6 +186,8 @@ class Vk{
     }
 
     /**
+     * Заливка документа (например GIF файл)
+     *
      * @param bool $gid
      * @param $file
      * @return bool|string
@@ -190,6 +198,8 @@ class Vk{
         if(!function_exists('curl_init')) return false;
 
         $data_json = $this->api('docs.getUploadServer', array('gid'=> intval($gid)));
+
+        var_dump($data_json);
 
         if(!isset($data_json['upload_url'])) return false;
 
@@ -223,6 +233,11 @@ class Vk{
     }
 
     /**
+     *
+     * Заливка видео
+     *
+     * http://vk.com/dev/video.save
+     *
      * @param array $options
      * @param bool $file
      * @return bool|string
@@ -238,21 +253,25 @@ class Vk{
 
         $attachment = 'video'.$data_json['owner_id'].'_'.$data_json['vid'];
 
+        $upload_url = $data_json['upload_url'];
+        $ch = curl_init($upload_url);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
+
+        // если указан файл то заливаем его отправкой POST переменной video_file
         if($file && file_exists($file)){
 
             $files['video_file'] = '@' . $file;
-
-            $upload_url = $data_json['upload_url'];
-
-            $ch = curl_init($upload_url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
+            curl_exec($ch);
 
-            $upload_data = json_decode(curl_exec($ch), true);
+        // иначе просто обращаемся по адресу (ну надо так!)
+        } else {
 
+            curl_exec($ch);
         }
 
         return $attachment;
