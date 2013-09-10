@@ -99,7 +99,7 @@ class Vk{
 
     function call($url = ''){
 
-        if(function_exists('curl_init')) $json = $this->curl_get($url); else $json = file_get_contents($url);
+        if(function_exists('curl_init')) $json = $this->curl_post($url); else $json = file_get_contents($url);
 
         $json = json_decode($json, true);
 
@@ -108,8 +108,11 @@ class Vk{
         return $json;
     }
 
+    // @deprecated
     private function curl_get($url)
     {
+        if(!function_exists('curl_init')) return false;
+
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $tmp = curl_exec ($ch);
@@ -118,6 +121,27 @@ class Vk{
         return $tmp;
     }
 
+    private function curl_post($url){
+
+        if(!function_exists('curl_init')) return false;
+
+        $param = parse_url($url);
+
+        if( $curl = curl_init() ) {
+
+            curl_setopt($curl, CURLOPT_URL, $param['scheme'].'://'.$param['host'].$param['path']);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $param['query']);
+            $out = curl_exec($curl);
+
+            curl_close($curl);
+
+            return $out;
+        }
+
+        return false;
+    }
     /**
      * @param array $options
      */
