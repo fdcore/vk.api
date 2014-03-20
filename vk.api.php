@@ -6,7 +6,7 @@
 class Vk{
 
     const CALLBACK_BLANK = 'https://oauth.vk.com/blank.html';
-    const AUTHORIZE_URL = 'https://oauth.vk.com/authorize?client_id={client_id}&scope={scope}&redirect_uri={redirect_uri}&display={display}&v=5.0&response_type={response_type}';
+    const AUTHORIZE_URL = 'https://oauth.vk.com/authorize?client_id={client_id}&scope={scope}&redirect_uri={redirect_uri}&display={display}&v=5.15&response_type={response_type}';
     const GET_TOKEN_URL = 'https://oauth.vk.com/access_token?client_id={client_id}&client_secret={client_secret}&code={code}&redirect_uri={redirect_uri}';
     const METHOD_URL = 'https://api.vk.com/method/';
 
@@ -181,7 +181,11 @@ class Vk{
         $attachments = array();
 
         foreach ($temp[0] as $key => $data) {
-            $files['file' . ($key+1)] = '@' . $data;
+            $path = realpath($data);
+
+            if($path){
+              $files['file' . ($key+1)] = '@' . realpath($data);
+            }
         }
 
         $upload_url = $data_json['upload_url'];
@@ -228,6 +232,10 @@ class Vk{
         if(!isset($data_json['upload_url'])) return false;
 
         $attachment = false;
+
+        $path = realpath($file);
+
+        if(!$path) return false;
 
         $files['file'] = '@' . $file;
 
@@ -287,8 +295,13 @@ class Vk{
 
         // если указан файл то заливаем его отправкой POST переменной video_file
         if($file && file_exists($file)){
+            //@todo надо протестировать заливку
+            $path = realpath($file);
+
+            if(!$path) return false;
 
             $files['video_file'] = '@' . $file;
+
             curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
             curl_exec($ch);
 
