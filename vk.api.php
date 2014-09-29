@@ -5,11 +5,14 @@
  */
 class Vk{
 
+    const API_VERSION = '5.24';
+
     const CALLBACK_BLANK = 'https://oauth.vk.com/blank.html';
-    const AUTHORIZE_URL = 'https://oauth.vk.com/authorize?client_id={client_id}&scope={scope}&redirect_uri={redirect_uri}&display={display}&v=5.15&response_type={response_type}';
+    const AUTHORIZE_URL = 'https://oauth.vk.com/authorize?client_id={client_id}&scope={scope}&redirect_uri={redirect_uri}&display={display}&v=5.24&response_type={response_type}';
     const GET_TOKEN_URL = 'https://oauth.vk.com/access_token?client_id={client_id}&client_secret={client_secret}&code={code}&redirect_uri={redirect_uri}';
     const METHOD_URL = 'https://api.vk.com/method/';
-
+    
+    
     public $secret_key = null;
     public $scope = array();
     public $client_id = null;
@@ -45,7 +48,9 @@ class Vk{
      * @return array - выводит массив данных или ошибку (но тоже в массиве)
      */
     function api($method = '', $vars = array()){
-
+        
+        $vars['v'] = self::API_VERSION;
+        
         $params = http_build_query($vars);
 
         $url = $this->http_build_query($method, $params);
@@ -171,7 +176,7 @@ class Vk{
         if(count($files) == 0) return false;
         if(!function_exists('curl_init')) return false;
 
-        $data_json = $this->api('photos.getWallUploadServer', array('gid'=> intval($gid)));
+        $data_json = $this->api('photos.getWallUploadServer', array('group_id'=> intval($gid)));
 
         if(!isset($data_json['upload_url'])) return false;
 
@@ -199,16 +204,18 @@ class Vk{
 
         $upload_data = json_decode(curl_exec($ch), true);
 
+        $upload_data['group_id'] = intval($gid);
+        
         $response = $this->api('photos.saveWallPhoto', $upload_data);
 
         if(count($response) > 0){
-
+        
             foreach($response as $photo){
-
+        
                 $attachments[] = $photo['id'];
             }
         }
-
+        
         return $attachments;
 
     }
