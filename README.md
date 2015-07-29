@@ -1,5 +1,5 @@
-vk.api
-======
+Vkontakte Api for PHP
+======================
 
 <iframe frameborder="0" allowtransparency="true" scrolling="no" src="https://money.yandex.ru/embed/small.xml?account=4100145951798&quickpay=small&yamoney-payment-type=on&button-text=06&button-size=s&button-color=black&targets=%D0%9D%D0%B0+%D0%BA%D0%BE%D1%84%D0%B5+%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D1%83&default-sum=100&successURL=" width="147" height="31"></iframe>
 
@@ -19,7 +19,7 @@ vk.api
 	include('vk.api.php');
 	$v = new Vk($config);
 	$url = $v->get_code_token();
-	
+
 	echo $url;
 ```
 
@@ -29,7 +29,7 @@ vk.api
 
 ```php
 	$response = $v->get_token('adbc0123456789');
-	
+
 	var_dump($response);
 ```
 
@@ -43,12 +43,12 @@ vk.api
 	$config['user_id'] = 0; // id текущего пользователя (не обязательно)
 	$config['access_token'] = 'ваш токен доступа';
 	$config['scope'] = 'wall,photos,video'; // права доступа к методам (для генерации токена)
-	
+
 	$v = new Vk($config);
-	
+
 	// пример публикации сообщения на стене пользователя
 	// значения массива соответствуют значениям в Api https://vk.com/dev/wall.post
-	
+
 	$response = $v->api('wall.post', array(
 	    'message' => 'I testing API form https://github.com/fdcore/vk.api')
 	);

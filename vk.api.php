@@ -1,18 +1,26 @@
 <?php
 /*
  * Class Vk
- * author: Dmitriy Nyashkin
+ * @author: Dmitriy Nyashkin
+ * @link: https://github.com/fdcore/vk.api
+ * @version: 2
  */
+
+// Возвращаемые ошибки https://vk.com/dev/errors
+
+class VkException extends Exception {};
+
 class Vk{
 
-    const API_VERSION = '5.24';
+    const API_VERSION = '5.35';
+    const VERSION = '2.0'; // версия vk.api
 
     const CALLBACK_BLANK = 'https://oauth.vk.com/blank.html';
     const AUTHORIZE_URL = 'https://oauth.vk.com/authorize?client_id={client_id}&scope={scope}&redirect_uri={redirect_uri}&display={display}&v=5.24&response_type={response_type}';
     const GET_TOKEN_URL = 'https://oauth.vk.com/access_token?client_id={client_id}&client_secret={client_secret}&code={code}&redirect_uri={redirect_uri}';
     const METHOD_URL = 'https://api.vk.com/method/';
-    
-    
+
+
     public $secret_key = null;
     public $scope = array();
     public $client_id = null;
@@ -47,10 +55,11 @@ class Vk{
      * @param array $vars - параметры метода
      * @return array - выводит массив данных или ошибку (но тоже в массиве)
      */
-    function api($method = '', $vars = array()){
-        
+    public function api($method = '', array $vars = array()){
+
         $vars['v'] = self::API_VERSION;
-        
+        $vars['access_token'] = $this->access_token;
+
         $params = http_build_query($vars);
 
         $url = $this->http_build_query($method, $params);
@@ -66,7 +75,7 @@ class Vk{
      * @return string
      */
     private function http_build_query($method, $params = ''){
-        return  self::METHOD_URL . $method . '?' . $params.'&access_token=' . $this->access_token;
+        return  self::METHOD_URL . $method . '?' . $params;
     }
 
     /**
@@ -102,11 +111,17 @@ class Vk{
         return $this->call($url);
     }
 
-    function call($url = ''){
+    private function call($url = ''){
 
         if(function_exists('curl_init')) $json = $this->curl_post($url); else $json = file_get_contents($url);
 
         $json = json_decode($json, true);
+
+        // Произошла ошибка на стороне VK, коды ошибок тут https://vk.com/dev/errors
+        if(isset($json['error'], $json['error']['error_msg'], $json['error']['error_code'])){
+
+            throw new VkException($json['error']['error_msg'], $json['error']['error_code']);
+        }
 
         if(isset($json['response'])) return $json['response'];
 
@@ -171,7 +186,7 @@ class Vk{
      * @param array $files
      * @return array|bool
      */
-    function upload_photo($gid = false, $files = array()){
+    public function upload_photo($gid = false, $files = array(), $return_ids = false){
 
         if(count($files) == 0) return false;
         if(!function_exists('curl_init')) return false;
@@ -205,17 +220,17 @@ class Vk{
         $upload_data = json_decode(curl_exec($ch), true);
 
         $upload_data['group_id'] = intval($gid);
-        
+
         $response = $this->api('photos.saveWallPhoto', $upload_data);
 
         if(count($response) > 0){
-        
+
             foreach($response as $photo){
-        
-                $attachments[] = $photo['id'];
+
+                if($return_ids) $attachments[] = $photo['id']; else $attachments[] = 'photo'.$photo['owner_id'].'_'.$photo['id'];
             }
         }
-        
+
         return $attachments;
 
     }
@@ -227,7 +242,7 @@ class Vk{
      * @param $file
      * @return bool|string
      */
-    function upload_doc($gid = false, $file){
+    public function upload_doc($gid = false, $file){
 
         if(!is_string($file)) return false;
         if(!function_exists('curl_init')) return false;
@@ -281,7 +296,7 @@ class Vk{
      * @param bool $file
      * @return bool|string
      */
-    function upload_video($options = array(), $file = false){
+    public function upload_video($options = array(), $file = false){
 
         if(!is_array($options)) return false;
         if(!function_exists('curl_init')) return false;
