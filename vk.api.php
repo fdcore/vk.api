@@ -290,7 +290,7 @@ class Vk{
 
         if(!isset($data_json['upload_url'])) return false;
 
-        $attachment = 'video'.$data_json['owner_id'].'_'.$data_json['vid'];
+        $attachment = 'video'.$data_json['owner_id'].'_'.$data_json['video_id'];
 
         $upload_url = $data_json['upload_url'];
         $ch = curl_init($upload_url);
