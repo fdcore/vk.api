@@ -1,8 +1,6 @@
 Vkontakte Api for PHP
 ======================
 
-<iframe frameborder="0" allowtransparency="true" scrolling="no" src="https://money.yandex.ru/embed/small.xml?account=4100145951798&quickpay=small&yamoney-payment-type=on&button-text=06&button-size=s&button-color=black&targets=%D0%9D%D0%B0+%D0%BA%D0%BE%D1%84%D0%B5+%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D1%83&default-sum=100&successURL=" width="147" height="31"></iframe>
-
 Работа с API Вконтакте для StandAlone приложений на языке php.
 
 Для работы с api вам необходимо выполнить несколько действий:
@@ -16,22 +14,21 @@ Vkontakte Api for PHP
 Выполним метод get_code_token для получения ссылки которая вернёт нам code
 
 ```php
-	include('vk.api.php');
-	$v = new Vk($config);
+	include_once 'vk.php';
+
+	$v = new Vk(array(
+		'client_id' => 12345,
+		'secret_key' => 'XXXXXX',
+		'user_id' => 12345,
+		'scope' => 'wall'
+	));
+
 	$url = $v->get_code_token();
 
 	echo $url;
 ```
 
-Переменная **$url** будет содержать ссылку при переходе на которую вас попросят авторизоваться и предоставить права приложению, после чего вас перекинут на пустую страницу и в URL будет code=<нужный код>.
-
-Для получения токена и **owner_id** выполните метод **get_token()**
-
-```php
-	$response = $v->get_token('adbc0123456789');
-
-	var_dump($response);
-```
+Переменная **$url** будет содержать ссылку при переходе на которую вас попросят авторизоваться и предоставить права приложению, после чего вас перекинут на пустую страницу и в URL будет access_token=**нужный код**.
 
 ## Выполнение Api
 
@@ -39,8 +36,8 @@ Vkontakte Api for PHP
 
 ```php
 	$config['secret_key'] = 'ваш секретный ключ приложения';
-	$config['client_id'] = 0; // номер приложения
-	$config['user_id'] = 0; // id текущего пользователя (не обязательно)
+	$config['client_id'] = 12345; // номер приложения
+	$config['user_id'] = 12345; // id текущего пользователя (не обязательно)
 	$config['access_token'] = 'ваш токен доступа';
 	$config['scope'] = 'wall,photos,video'; // права доступа к методам (для генерации токена)
 
@@ -50,8 +47,14 @@ Vkontakte Api for PHP
 	// значения массива соответствуют значениям в Api https://vk.com/dev/wall.post
 
 	$response = $v->api('wall.post', array(
-	    'message' => 'I testing API form https://github.com/fdcore/vk.api')
-	);
+	    'message' => 'I testing API form https://github.com/fdcore/vk.api'
+	));
+
+	// или
+
+	$response = $v->wall->post(array(
+	    'message' => 'I testing API form https://github.com/fdcore/vk.api'
+	));
 ```
 
 ## Заливка файлов
