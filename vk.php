@@ -67,6 +67,9 @@ class Vk{
         return $this->call($url);
     }
 
+    public function execute($code){
+        return $this->api('execute', array('code' => $code));
+    }
 
     /**
      * Построение конечного URI для выхова
@@ -85,7 +88,7 @@ class Vk{
      * @param string callback url
      * @return mixed
      */
-    public function get_code_token( $type  = "token", $callback = CALLBACK_BLANK ){
+    public function get_code_token( $type  = "token", $callback = self::CALLBACK_BLANK ){
 
         $url = self::AUTHORIZE_URL;
         $url .= http_build_query(array(
@@ -100,7 +103,7 @@ class Vk{
         return $url;
     }
 
-    public function get_access_token($code, $callback = CALLBACK_BLANK ){
+    public function get_access_token($code, $callback = self::CALLBACK_BLANK ){
 
         $url = self::GET_TOKEN_URL;
 
@@ -176,9 +179,10 @@ class Vk{
     /**
      * @param bool $gid
      * @param array $files
+     * @param bool (TRUE = вернуть список id файлов | FALSE = вернуть массив аттачей для прикрепления)
      * @return array|bool
      */
-    public function upload_photo($gid = false, $files = [], $return_ids = false){
+    public function upload_photo($gid = 0, $files = [], $return_ids = false){
 
         if(count($files) == 0) return false;
         if(!function_exists('curl_init')) return false;
@@ -187,7 +191,7 @@ class Vk{
 
         if(!isset($data_json['upload_url'])) return false;
 
-        $temp = array_chunk($files, 4);
+        $temp = array_chunk($files, 4); // лимит файлов
 
         $files = [];
         $attachments = [];
@@ -219,7 +223,10 @@ class Vk{
 
             foreach($response as $photo){
 
-                if($return_ids) $attachments[] = $photo['id']; else $attachments[] = 'photo'.$photo['owner_id'].'_'.$photo['id'];
+                if($return_ids)
+                    $attachments[] = $photo['id'];
+                else
+                    $attachments[] = 'photo'.$photo['owner_id'].'_'.$photo['id'];
             }
         }
 

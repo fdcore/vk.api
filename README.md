@@ -17,10 +17,11 @@ Vkontakte Api for PHP
 	include_once 'vk.php';
 
 	$v = new Vk(array(
-		'client_id' => 12345,
-		'secret_key' => 'XXXXXX',
-		'user_id' => 12345,
-		'scope' => 'wall'
+		'client_id' => 12345, // (обязательно) номер приложения
+		'secret_key' => 'XXXXXX', // (обязательно) получить тут https://vk.com/editapp?id=12345&section=options где 12345 - client_id
+		'user_id' => 12345, // ваш номер пользователя в вк
+		'scope' => 'wall', // права доступа
+		'v' => '5.35' // не обязательно
 	));
 
 	$url = $v->get_code_token();
@@ -57,6 +58,17 @@ Vkontakte Api for PHP
 	));
 ```
 
+## Execute
+
+Универсальный метод, который позволяет запускать последовательность других методов, сохраняя и фильтруя промежуточные результаты.
+
+Подробнее [https://vk.com/dev/execute]
+
+
+```
+	$v->execute('return API.wall.post({message: "Проверка Execute ^_^"});'));
+```
+
 ## Заливка файлов
 
 Для заливки файлов в данный момент есть 3 метода:
@@ -67,12 +79,19 @@ Vkontakte Api for PHP
 
 ### Пример загрузки фото
 
+Для загрузки фотографии, существует метод **upload_photo()**.
+
+Параметры:
+**$gid** - (стандартно 0) идентификатор сообщества, на стену которого нужно загрузить фото (без знака «минус»). (*целое число*)
+**$files** - массив путей к файлам (например array('4b67bhWrc4g.jpg', 'n52W2BdXdYE.jpg'))
+**$return_ids** - (стандартно false) возвращать id файлов или готовые строки для прикрепления (например photo12345_6789)
+
 ```php
     // загрузка фото на сервер
     $attachments = $v->upload_photo(0, array('4b67bhWrc4g.jpg', 'n52W2BdXdYE.jpg'));
 
     // публикация на стене
-    $response = $v->api('wall.post', array(
+    $response = $v->wall->post(array(
         'message'=>'я публикую фотографии',
         'attachments' => implode(',', $attachments)
       )
