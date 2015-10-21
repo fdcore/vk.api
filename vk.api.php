@@ -212,7 +212,7 @@ class Vk{
         
             foreach($response as $photo){
         
-                $attachments[] = $photo['id'];
+                $attachments[] = 'photo'.$photo['owner_id'].'_'.$photo['id'];
             }
         }
         
