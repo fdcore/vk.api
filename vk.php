@@ -136,6 +136,9 @@ class Vk{
         return $json;
     }
 
+    /*
+      Send cURL POST request
+    */
     private function curl_post($url){
 
         if(!function_exists('curl_init')) return false;
@@ -148,6 +151,8 @@ class Vk{
             curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
             curl_setopt($curl, CURLOPT_POST, true);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $param['query']);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER ,false);
+
             $out = curl_exec($curl);
 
             curl_close($curl);
@@ -157,6 +162,7 @@ class Vk{
 
         return false;
     }
+
     /**
      * @param array $options
      */
@@ -207,11 +213,13 @@ class Vk{
         $upload_url = $data_json['upload_url'];
 
         $ch = curl_init($upload_url);
+
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $upload_data = json_decode(curl_exec($ch), true);
 
@@ -268,6 +276,7 @@ class Vk{
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $upload_data = json_decode(curl_exec($ch), true);
 
@@ -313,6 +322,7 @@ class Vk{
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         // если указан файл то заливаем его отправкой POST переменной video_file
         if($file && file_exists($file)){
