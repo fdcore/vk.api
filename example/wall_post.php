@@ -4,6 +4,11 @@
 
 require '_connect_vk.php';
 
-$response = $v->wall->post(array('message' => 'Тестирую API из https://github.com/fdcore/vk.api'));
+$attachments = $v->upload_photo(0, array('1737759.jpg'));
 
-print_r($response);
+  // публикация на стене
+  $response = $v->wall->post(array(
+      'message'=>'test 1737759.jpg',
+      'attachments' => implode(',', $attachments)
+    )
+  );
