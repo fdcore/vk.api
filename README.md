@@ -1,133 +1,122 @@
 Vkontakte Api for PHP
 ======================
 
-Работа с API Вконтакте для StandAlone приложений на языке php.
+[Russian readme](README_RU.md)
 
-Для работы с api вам необходимо выполнить несколько действий:
+Work with Vkontakte API for StandAlone application on php.
 
-1. Создать **"Standalone-приложение"** https://vk.com/editapp?act=create
-2. Получить access_token (об этом ниже)
-3. Классу нужно передать **client_id** приложения и секретный ключ который вам даётся при создании приложения
+To work with api you need to perform several actions:
 
-## Получение access_token
+1. Create **"Standalone-app"** https://vk.com/editapp?act=create
+2. Get access_token (see below)
+3. Set **client_id** and **secret_key** application.
 
-Выполним метод get_code_token для получения ссылки которая вернёт нам code
-
-```php
-	include_once 'vk.php';
-
-	$v = new Vk(array(
-		'client_id' => 12345, // (обязательно) номер приложения
-		'secret_key' => 'XXXXXX', // (обязательно) получить тут https://vk.com/editapp?id=12345&section=options где 12345 - client_id
-		'user_id' => 12345, // ваш номер пользователя в вк
-		'scope' => 'wall', // права доступа
-		'v' => '5.35' // не обязательно
-	));
-
-	$url = $v->get_code_token();
-
-	echo $url;
-```
-
-Переменная **$url** будет содержать ссылку при переходе на которую вас попросят авторизоваться и предоставить права приложению, после чего вас перекинут на пустую страницу и в URL будет access_token=**нужный код**.
-
-## Выполнение Api
-
-Для выполнения определённых Api вам необходимы на это права, для этого при создании токена нужно указать нужные scope.
+## Get access_token
+Execute method get_code_token for get link. Go to link and get access app, after you redirected on blank page with access_token on hash url.
 
 ```php
-	$config['secret_key'] = 'ваш секретный ключ приложения';
-	$config['client_id'] = 12345; // номер приложения
-	$config['user_id'] = 12345; // id текущего пользователя (не обязательно)
-	$config['access_token'] = 'ваш токен доступа';
-	$config['scope'] = 'wall,photos,video'; // права доступа к методам (для генерации токена)
+include_once 'vk.php';
 
-	$v = new Vk($config);
+$v = new Vk(array(
+	'client_id' => 12345, // (required) app id
+	'secret_key' => 'XXXXXX', // (required) get on https://vk.com/editapp?id=12345&section=options
+	'user_id' => 12345, // your user id on vk.com
+	'scope' => 'wall', // scope access
+	'v' => '5.35' // vk api version
+));
 
-	// пример публикации сообщения на стене пользователя
-	// значения массива соответствуют значениям в Api https://vk.com/dev/wall.post
+$url = $v->get_code_token();
 
-	$response = $v->api('wall.post', array(
-	    'message' => 'I testing API form https://github.com/fdcore/vk.api'
-	));
-
-	// или
-
-	$response = $v->wall->post(array(
-	    'message' => 'I testing API form https://github.com/fdcore/vk.api'
-	));
+echo $url;
 ```
 
-## Execute
+Variable **$url** it will contain a link for redirect to which you will be asked to log in and provide the right application, and then you are thrown on a blank page and the URL is access_token=**your token**.
 
-Универсальный метод, который позволяет запускать последовательность других методов, сохраняя и фильтруя промежуточные результаты.
+## Execute Api
 
-Подробнее https://vk.com/dev/execute
+To receive necessary permissions during authorization, when the authorization window opens you need to pass scope parameter containing names of the required permissions separated by space or comma.
 
+https://vk.com/dev/permissions
 
-```
-	$v->execute('return API.wall.post({message: "Проверка Execute ^_^"});'));
-```
-
-## Заливка файлов
-
-Для заливки файлов в данный момент есть 3 метода:
-
-- Загрузка видеозаписей **$v->upload_video()**
-- Загрузка фотографий на стену пользователя **$v->upload_photo()**
-- Загрузка документов **$v->upload_doc()**
-
-### Пример загрузки фото
-
-Для загрузки фотографии, существует метод **upload_photo()**.
-
-Параметры:
-**$gid** - (стандартно 0) идентификатор сообщества, на стену которого нужно загрузить фото (без знака «минус»). (*целое число*)
-**$files** - массив путей к файлам (например array('4b67bhWrc4g.jpg', 'n52W2BdXdYE.jpg'))
-**$return_ids** - (стандартно false) возвращать id файлов или готовые строки для прикрепления (например photo12345_6789)
+Example
 
 ```php
-    // загрузка фото на сервер
-    $attachments = $v->upload_photo(0, array('4b67bhWrc4g.jpg', 'n52W2BdXdYE.jpg'));
+$config['secret_key'] = 'your secret key';
+$config['client_id'] = 12345; // app client id
+$config['user_id'] = 12345; // id current user (required
+$config['access_token'] = 'your access token';
+$config['scope'] = 'wall,photos,video'; // scope for get access token
 
-    // публикация на стене
-    $response = $v->wall->post(array(
-        'message'=>'я публикую фотографии',
-        'attachments' => implode(',', $attachments)
-      )
-    );
+$v = new Vk($config);
+
+// example post to user wall
+// Method info https://vk.com/dev/wall.post
+
+$response = $v->api('wall.post', array(
+    'message' => 'I testing API form https://github.com/fdcore/vk.api'
+));
+
+// or
+
+$response = $v->wall->post(array(
+    'message' => 'I testing API form https://github.com/fdcore/vk.api'
+));
+```
+
+## Upload files
+
+- Upload video **$v->upload_video()**
+- Upload photo to wall **$v->upload_photo()**
+- Upload documents **$v->upload_doc()**
+
+### Example upload photo
+
+For upload photo, use method **upload_photo()**.
+
+Params:
+
+- **$gid** - (*Intager*) (default is 0) id community, for upload photo.
+- **$files** - (*Array*) path to file (example array('bear.jpg', 'vodka.jpg'))
+- **$return_ids** - (*Bool*) (default is false) return files id's or complete strings for attach (example photo12345_6789) (photo - type, 12345 - user, 6789 - photo id)
+
+```php
+// upload photo on server
+$attachments = $v->upload_photo(0, array('bear.jpg', 'vodka.jpg'), false);
+
+// публикация на стене
+$response = $v->wall->post(array(
+    'message'=>'my cool photo',
+    'attachments' => implode(',', $attachments)
+  )
+);
+```
+
+### Example upload video
+
+```php
+// embed from YouTube without upload
+
+$attach_video = $v->upload_video(array(
+   'link'=>'https://youtu.be/exAmqVtYbis',
+   'title' => 'Hatsune Miku Project Diva 2nd Opening Full HD',
+   'description' => "First Song: "Kocchi Muite baby" by ryo and kz",
+   'wallpost' => 1
+));
+
+// upload video on VK.com
+$attach_name = $v->upload_video(
+   array('name' => 'Test video',
+       'description' => 'My description',
+       'wallpost' => 1,
+       'group_id' => 0
+   ), 'video.mp4'); // video.mp4 - full path to video file on server
 
 ```
 
-### Пример загрузки видео
+### Example upload documents
 
 ```php
-
-   // встраивание видео с YouTube без заливки
-
-   $attach_video = $v->upload_video(array(
-       'link'=>'http://www.youtube.com/watch?v=5ZeA4AMrcd8',
-       'title' => 'Tasogare Otome X Amnesia',
-       'description' => "Трек оригинал: Hiiragi Nao - Requiem",
-       'wallpost' => 1
-   ));
-
-   // заливка видео на VK.com
-
-   $attach_name = $v->upload_video(
-       array('name' => 'Fadoo Sama',
-           'description' => 'AMV',
-           'wallpost' => 1,
-           'group_id' => 0
-       ), '04975.Fadoo-Sama-DUALITY.amvnews.ru.mp4');
-
-```
-
-### Пример загрузки документа
-
-```php
-    $attach_doc_file = $v->upload_doc(0, 'iZKE4JdP4Q0mT.jpg');
+    $attach_doc_file = $v->upload_doc(0, 'funny.gif');
 
     if ( is_string($attach_doc_file) ) echo $attach_doc_file;
-
 ```
