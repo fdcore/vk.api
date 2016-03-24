@@ -346,4 +346,26 @@ class Vk{
 
     }
 
+    /**
+     * Загружает видео из массива ссылок
+     *
+     * @param array $videos — массив ссылок на видео (youtube/vimeo)
+     * @return array — массив загруженных видео (прикреплений) для использования при постинге
+     */
+    public function uploadVideosFromArray(array $videos){
+
+        $attached_videos = [];
+
+        foreach($videos as $i => $video_url) {
+            $attached_videos[] = $this->upload_video(
+                [
+                    'link' => $video_url,
+                    'wallpost' => 0
+                ]
+            );
+        }
+
+        return $attached_videos;
+    }
 }
+
