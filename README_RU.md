@@ -9,6 +9,27 @@ Vkontakte Api for PHP
 2. Получить access_token (об этом ниже)
 3. Классу нужно передать **client_id** приложения и секретный ключ который вам даётся при создании приложения
 
+## Использование
+
+C composer
+
+```php
+<?php
+include 'vendor/autoload.php';
+$v = new Vk();
+?>
+```
+
+без
+
+```php
+<?php
+include 'vk.php';
+$v = new Vk();
+?>
+```
+
+
 ## Получение access_token
 
 Выполним метод get_code_token для получения ссылки которая вернёт нам code

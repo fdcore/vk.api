@@ -3,7 +3,7 @@
  * Class Vk
  * @author: Dmitriy Nyashkin
  * @link: https://github.com/fdcore/vk.api
- * @version: 2
+ * @version: 2.0
  */
 
 // Возвращаемые ошибки https://vk.com/dev/errors
@@ -12,7 +12,7 @@ class VkException extends Exception {};
 
 class Vk{
 
-    private $v = '5.35'; // версия Api VKontakte @link https://vk.com/dev/versions
+    private $v = '5.53'; // версия Api VKontakte @link https://vk.com/dev/versions
     const VERSION = '2.0'; // версия этой библиотеки
 
     const CALLBACK_BLANK = 'https://oauth.vk.com/blank.html';
@@ -64,6 +64,7 @@ class Vk{
         $params = http_build_query($vars);
         $url    = $this->http_build_query($method, $params);
 
+        print $url;
         return $this->call($url);
     }
 
@@ -368,4 +369,3 @@ class Vk{
         return $attached_videos;
     }
 }
-

@@ -11,6 +11,26 @@ To work with api you need to perform several actions:
 2. Get access_token (see below)
 3. Set **client_id** and **secret_key** application.
 
+## USAGE
+
+With composer
+
+```php
+<?php
+include 'vendor/autoload.php';
+$v = new Vk();
+?>
+```
+
+Without
+
+```php
+<?php
+include 'vk.php';
+$v = new Vk();
+?>
+```
+
 ## Get access_token
 Execute method get_code_token for get link. Go to link and get access app, after you redirected on blank page with access_token on hash url.
 

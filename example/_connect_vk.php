@@ -1,6 +1,6 @@
 <?php
 
-require '../vk.php'; //
+require '../vendor/autoload.php'; //
 
 $config['secret_key'] = ''; // ваш секретный ключ приложения
 $config['client_id'] = 0; // (обязательно) получить тут https://vk.com/apps?act=manage где ID приложения = client_id
