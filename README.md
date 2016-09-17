@@ -1,7 +1,7 @@
 Vkontakte Api for PHP
 ======================
 
-[Russian readme](README_RU.md)
+[НА РУССКОМ](README_RU.md)
 
 Work with Vkontakte API for StandAlone application on php.
 
@@ -11,7 +11,15 @@ To work with api you need to perform several actions:
 2. Get access_token (see below)
 3. Set **client_id** and **secret_key** application.
 
-## USAGE
+
+## Install
+
+```
+composer require fdcore/vk.api
+```
+
+
+## Usage
 
 With composer
 
@@ -119,7 +127,7 @@ $response = $v->wall->post(array(
 $attach_video = $v->upload_video(array(
    'link'=>'https://youtu.be/exAmqVtYbis',
    'title' => 'Hatsune Miku Project Diva 2nd Opening Full HD',
-   'description' => "First Song: "Kocchi Muite baby" by ryo and kz",
+   'description' => "First Song: \"Kocchi Muite baby\" by ryo and kz",
    'wallpost' => 1
 ));
 

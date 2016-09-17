@@ -9,6 +9,14 @@ Vkontakte Api for PHP
 2. Получить access_token (об этом ниже)
 3. Классу нужно передать **client_id** приложения и секретный ключ который вам даётся при создании приложения
 
+
+## Установка
+
+```
+composer require fdcore/vk.api
+```
+
+
 ## Использование
 
 C composer
@@ -50,7 +58,24 @@ $v = new Vk();
 	echo $url;
 ```
 
+Подробнее <https://vk.com/dev/access_token>
+
 Переменная **$url** будет содержать ссылку при переходе на которую вас попросят авторизоваться и предоставить права приложению, после чего вас перекинут на пустую страницу и в URL будет access_token=**нужный код**.
+
+!!! Для работы с другого IP адреса (например с сервера) вам нужен вариант авторизации (2) [Authorization code flow](https://vk.com/dev/authcode_flow_user).
+
+```php
+
+if(!isset($_GET['code'])) {
+	$url = $v->get_code_token('code');
+	header("Location: $url");
+
+} else {
+	$access_token = $v->get_access_token($_GET['code']);
+}
+
+
+```
 
 ## Выполнение Api
 
@@ -134,7 +159,7 @@ https://vk.com/dev/permissions
    $attach_video = $v->upload_video(array(
        'link'=>'https://youtu.be/exAmqVtYbis',
        'title' => 'Hatsune Miku Project Diva 2nd Opening Full HD',
-       'description' => "First Song: "Kocchi Muite baby" by ryo and kz",
+       'description' => "First Song: \"Kocchi Muite baby\" by ryo and kz",
        'wallpost' => 1
    ));
 
