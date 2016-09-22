@@ -25,6 +25,7 @@ class Vk{
     public $client_id   = null;
     public $access_token= null;
     public $owner_id    = 0;
+    public $debug       = false;
     private $_api_scope = '';
 
     /**
@@ -64,7 +65,9 @@ class Vk{
         $params = http_build_query($vars);
         $url    = $this->http_build_query($method, $params);
 
-        print $url;
+        // Для тестирования и отладки запросов
+        if($this->debug) return $url;
+
         return $this->call($url);
     }
 
