@@ -260,8 +260,6 @@ class Vk{
 
         $data_json = $this->api('docs.getUploadServer', array('gid'=> intval($gid)));
 
-        var_dump($data_json);
-
         if(!isset($data_json['upload_url'])) return false;
 
         $attachment = false;
