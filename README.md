@@ -26,6 +26,8 @@ With composer
 ```php
 <?php
 include 'vendor/autoload.php';
+
+use fdcore\vkapi\Vk;
 $v = new Vk();
 ?>
 ```
