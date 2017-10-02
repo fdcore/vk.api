@@ -190,10 +190,12 @@ class Vk{
      * @param bool $gid
      * @param array $files
      * @param bool (TRUE = вернуть список id файлов | FALSE = вернуть массив аттачей для прикрепления)
+     * @param array $additional_data {latitude, longitude, caption}
+     * @param int $usleep сколько спать в микросекундах между запросами
      * @return array|bool
      */
-    public function upload_photo($gid = 0, $files = [], $return_ids = false){
-
+    public function upload_photo($gid = 0, array $files = [], $return_ids = false, array $additional_data = [], $usleep = 0){
+        
         if(count($files) == 0) return false;
         if(!function_exists('curl_init')) return false;
 
@@ -203,45 +205,57 @@ class Vk{
 
         $temp = array_chunk($files, 4); // лимит файлов
 
-        $files = [];
+        
         $attachments = [];
+        
+        foreach($temp as $chunk_index => $temp_chunk){
+            
+            if($chunk_index) usleep($usleep);
+            
+            $files = [];
+            
+            foreach ($temp_chunk as $key => $data) {
+                $path = realpath($data);
 
-        foreach ($temp[0] as $key => $data) {
-            $path = realpath($data);
-
-            if($path){
-              $files['file' . ($key+1)] = (class_exists('CURLFile', false)) ? new CURLFile(realpath($data)) : '@' . realpath($data);
+                if($path){
+                  $files['file' . ($key+1)] = (class_exists('CURLFile', false)) ? new CURLFile(realpath($data)) : '@' . realpath($data);
+                }
             }
-        }
 
-        $upload_url = $data_json['upload_url'];
+            $upload_url = $data_json['upload_url'];
 
-        $ch = curl_init($upload_url);
+            $ch = curl_init($upload_url);
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-        $upload_data = json_decode(curl_exec($ch), true);
+            $upload_data = json_decode(curl_exec($ch), true);
 
-        $upload_data['group_id'] = intval($gid);
+            $upload_data['group_id'] = intval($gid);
 
-        $response = $this->api('photos.saveWallPhoto', $upload_data);
+            $upload_data += $additional_data;
+            
+            usleep($usleep);
+            
+            $response = $this->api('photos.saveWallPhoto', $upload_data);
 
-        if(count($response) > 0){
+            if(count($response) > 0){
 
-            foreach($response as $photo){
+                foreach($response as $photo){
 
-                if($return_ids)
-                    $attachments[] = $photo['id'];
-                else
-                    $attachments[] = 'photo'.$photo['owner_id'].'_'.$photo['id'];
+                    if($return_ids)
+                        $attachments[] = $photo['id'];
+                    else
+                        $attachments[] = 'photo'.$photo['owner_id'].'_'.$photo['id'];
+                }
             }
+            
         }
-
+        
         return $attachments;
 
     }
