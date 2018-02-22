@@ -33,7 +33,7 @@ class Vk{
      * Передаются параметры настроек
      * @param array $options
      */
-    function __construct( $options = [] ){
+    public function __construct( $options = [] ){
 
         $this->scope[]='offline'; // обязательно запрашиваем права на оффлайн работу без участия пользователя
 
@@ -41,12 +41,12 @@ class Vk{
     }
 
     // Magic Method (*__*)
-    function __call($method, $params){
+    public function __call($method, $params){
         if(!isset($params[0])) $params[0] = [];
         return $this->api($this->_api_scope . '.' . $method, $params[0]);
     }
 
-    function  __get($name){
+    public function  __get($name){
         $this->_api_scope = $name;
         return $this;
     }
