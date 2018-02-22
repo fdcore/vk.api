@@ -155,7 +155,8 @@ class Vk{
             curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
             curl_setopt($curl, CURLOPT_POST, true);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $param['query']);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER ,false);
+	        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+	        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 
             $out = curl_exec($curl);
 
@@ -231,7 +232,8 @@ class Vk{
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+	        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
             $upload_data = json_decode(curl_exec($ch), true);
 
@@ -292,7 +294,8 @@ class Vk{
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
         $upload_data = json_decode(curl_exec($ch), true);
 
@@ -338,7 +341,8 @@ class Vk{
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
         // если указан файл то заливаем его отправкой POST переменной video_file
         if($file && file_exists($file)){
