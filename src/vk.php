@@ -8,7 +8,7 @@
 
 // Возвращаемые ошибки https://vk.com/dev/errors
 
-class VkException extends Exception {};
+class VkException extends Exception {}
 
 class Vk{
 
