@@ -92,7 +92,7 @@ class Vk{
      * @param string callback url
      * @return mixed
      */
-    public function get_code_token( $type  = "token", $callback = self::CALLBACK_BLANK ){
+    public function get_code_token( $type  = 'token', $callback = self::CALLBACK_BLANK ){
 
         $url = self::AUTHORIZE_URL;
         $url .= http_build_query(array(
@@ -226,10 +226,10 @@ class Vk{
 
             $ch = curl_init($upload_url);
 
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-type: multipart/form-data' ));
             curl_setopt($ch, CURLOPT_HEADER, 0);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible;)');
             curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
@@ -287,10 +287,10 @@ class Vk{
         $upload_url = $data_json['upload_url'];
 
         $ch = curl_init($upload_url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-type: multipart/form-data' ));
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible;)');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
@@ -334,10 +334,10 @@ class Vk{
         $upload_url = $data_json['upload_url'];
         $ch = curl_init($upload_url);
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-type: multipart/form-data' ));
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible;)');
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         // если указан файл то заливаем его отправкой POST переменной video_file
