@@ -8,7 +8,7 @@
 
 // Возвращаемые ошибки https://vk.com/dev/errors
 
-class VkException extends Exception {};
+class VkException extends Exception {}
 
 class Vk{
 
@@ -33,7 +33,7 @@ class Vk{
      * Передаются параметры настроек
      * @param array $options
      */
-    function __construct( $options = [] ){
+    public function __construct( $options = [] ){
 
         $this->scope[]='offline'; // обязательно запрашиваем права на оффлайн работу без участия пользователя
 
@@ -41,12 +41,12 @@ class Vk{
     }
 
     // Magic Method (*__*)
-    function __call($method, $params){
+    public function __call($method, $params){
         if(!isset($params[0])) $params[0] = [];
         return $this->api($this->_api_scope . '.' . $method, $params[0]);
     }
 
-    function  __get($name){
+    public function  __get($name){
         $this->_api_scope = $name;
         return $this;
     }
@@ -92,7 +92,7 @@ class Vk{
      * @param string callback url
      * @return mixed
      */
-    public function get_code_token( $type  = "token", $callback = self::CALLBACK_BLANK ){
+    public function get_code_token( $type  = 'token', $callback = self::CALLBACK_BLANK ){
 
         $url = self::AUTHORIZE_URL;
         $url .= http_build_query(array(
@@ -227,10 +227,10 @@ class Vk{
 
             $ch = curl_init($upload_url);
 
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-type: multipart/form-data' ));
             curl_setopt($ch, CURLOPT_HEADER, 0);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible;)');
             curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
 	        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 	        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
@@ -289,10 +289,10 @@ class Vk{
         $upload_url = $data_json['upload_url'];
 
         $ch = curl_init($upload_url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-type: multipart/form-data' ));
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible;)');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
 	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 	    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
@@ -337,12 +337,12 @@ class Vk{
         $upload_url = $data_json['upload_url'];
         $ch = curl_init($upload_url);
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-type: multipart/form-data' ));
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
-	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-	    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+	      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+	      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
         // если указан файл то заливаем его отправкой POST переменной video_file
         if($file && file_exists($file)){
